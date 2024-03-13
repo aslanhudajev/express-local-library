@@ -1,10 +1,11 @@
+import cookieParser from "cookie-parser";
 import "dotenv/config";
 import express from "express";
-import mongoose, { mongo } from "mongoose";
 import createError from "http-errors";
-import cookieParser from "cookie-parser";
+import mongoose, { mongo } from "mongoose";
 import logger from "morgan";
 
+import catalogRouter from "./routes/catalog.js";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 
@@ -27,6 +28,7 @@ app.use(express.static("./public"));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/catalog", catalogRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
