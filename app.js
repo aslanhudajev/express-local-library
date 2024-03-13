@@ -1,4 +1,6 @@
+import "dotenv/config";
 import express from "express";
+import mongoose, { mongo } from "mongoose";
 import createError from "http-errors";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
@@ -7,6 +9,11 @@ import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 
 const app = express();
+
+await mongoose
+  .connect(process.env.MDB_CONNECTION_STRING)
+  .catch((error) => console.log(error.message));
+mongoose.set("strictQuery", false);
 
 // view engine setup
 app.set("views", "./views");
