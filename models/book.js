@@ -10,9 +10,8 @@ const BookSchema = new Schema({
   genre: [{ type: Schema.Types.ObjectId, ref: "GenreModel" }],
 });
 
-BookSchema.virtual("url").get(() => {
-  const book = this;
-  return `/catalog/book/${book._id}`;
+BookSchema.virtual("url").get(function () {
+  return `/catalog/book/${this._id}`;
 });
 
 export default mongoose.model("BookModel", BookSchema);

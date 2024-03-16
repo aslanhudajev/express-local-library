@@ -12,7 +12,7 @@ import usersRouter from "./routes/users.js";
 const app = express();
 
 await mongoose
-  .connect(process.env.MDB_CONNECTION_STRING)
+  .connect(process.env.MDB_CONNECTION_STRING, { dbName: "local_library" })
   .catch((error) => console.log(error.message));
 mongoose.set("strictQuery", false);
 

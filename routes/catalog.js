@@ -53,16 +53,34 @@ router.post("/genre/:id/delete", GenreController.genreDeletePost);
 
 //bookInstances
 //C
-router.get("/bookInstance/create", BookInstanceController.bookInstanceCreateGet);
-router.post("/bookInstance/create", BookInstanceController.bookInstanceCreatePost);
+router.get(
+  "/bookInstance/create",
+  BookInstanceController.bookInstanceCreateGet,
+);
+router.post(
+  "/bookInstance/create",
+  BookInstanceController.bookInstanceCreatePost,
+);
 //R
 router.get("/bookInstance/:id/", BookInstanceController.bookInstanceDetails);
 router.get("/bookInstances", BookInstanceController.bookInstanceList);
 //U
-router.get("/bookInstance/:id/update", BookInstanceController.bookInstanceUpdateGet);
-router.post("/bookInstance/:id/update", BookInstanceController.bookInstanceUpdatePost);
+router.get(
+  "/bookInstance/:id/update",
+  BookInstanceController.bookInstanceUpdateGet,
+);
+router.post(
+  "/bookInstance/:id/update",
+  BookInstanceController.bookInstanceUpdatePost,
+);
 //D
-router.get("/bookInstance/:id/delete", BookInstanceController.bookInstanceDeleteGet);
-router.post("/bookInstance/:id/delete", BookInstanceController.bookInstanceDeletePost);
+router.get(
+  "/bookInstance/:id/delete",
+  BookInstanceController.bookInstanceDeleteGet,
+);
+router.post(
+  "/bookInstance/:id/delete",
+  BookInstanceController.bookInstanceDeletePost,
+);
 
 export default router;

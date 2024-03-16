@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+    h1= title 
+    if bookInstances.length > 0
+        ul 
+            each bookInstance in bookInstances 
+                li
+                    a(href=bookInstance.url) #{bookInstance.book.title} | #{bookInstance.imprint} -&nbsp;
+                    if bookInstance.status == "Available"
+                        span.text-success #{bookInstance.status}
+                    else if bookInstance.status == "Loaned"
+                        span.text-warning #{bookInstance.status} (Due: #{bookInstance.due_back_pretty})
+                    else if bookInstance.status == "Maintenance"
+                        span.text-danger #{bookInstance.status}
+    else 
+        span There are no book instances

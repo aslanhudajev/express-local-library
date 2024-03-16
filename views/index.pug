@@ -2,4 +2,15 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to Local Library, a very basic Express website.
+
+  h1 Dynamic content 
+
+  p The library has the following document counts: 
+
+  ul 
+    li Books: !{bookCount}
+    li Book instances: !{bookInstanceCount}
+    li Available book instances: !{bookInstanceAvailableCount}
+    li Authors: !{authorCount}
+    li Genres: !{genreCount}

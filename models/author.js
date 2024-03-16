@@ -9,13 +9,15 @@ const AuthorSchema = new Schema({
   date_of_death: Date,
 });
 
-AuthorSchema.virtual("full_name").get(() => {
-  const author = this;
-
-  if (author.first && author.last) {
-    return `${author.first}, ${author.last}`;
+AuthorSchema.virtual("full_name").get(function () {
+  if (this.first_name && this.last_name) {
+    return `${this.first_name}, ${this.last_name}`;
   } else {
-    return author.first ? author.first : author.last ? author.last : "";
+    return this.first_name
+      ? this.first_name
+      : this.last_name
+        ? this.last_name
+        : "";
   }
 });
 
