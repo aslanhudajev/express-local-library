@@ -12,6 +12,6 @@ block content
                     else if bookInstance.status == "Loaned"
                         span.text-warning #{bookInstance.status} (Due: #{bookInstance.due_back_pretty})
                     else if bookInstance.status == "Maintenance"
-                        span.text-danger #{bookInstance.status}
+                        span.text-danger #{bookInstance.status} (Due: #{bookInstance.due_back_pretty})
     else 
         span There are no book instances

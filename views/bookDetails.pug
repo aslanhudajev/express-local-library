@@ -1,0 +1,44 @@
+extends layout 
+
+block content 
+    - const genresString = book.genre.map((genre) => genre.name).join(", "); 
+
+    h1= book.title
+
+    div #[strong Author:] 
+        a(href=book.author.url) #{book.author.full_name}
+    p #[strong Summary:] #{book.summary}
+    div #[strong ISBN:] #{book.isbn} 
+    div #[strong Genre: ]
+        each genre, index in book.genre 
+            a(href=genre.url) #{genre.name}
+            if index < book.genre.length -1
+                |,&nbsp;
+
+    br
+    br
+
+    h2 Copies
+    div
+        each bookInstance in bookInstances 
+            hr
+            div
+                div #[strong Status: ] 
+                    if bookInstance.status == "Available"
+                        span.text-success #{bookInstance.status}
+                    else if bookInstance.status == "Loaned"
+                        span.text-warning #{bookInstance.status}
+                    else
+                        span.text-danger #{bookInstance.status}
+                
+                div #[strong Imprint: ] #{bookInstance.imprint}
+
+                unless bookInstance.status == "Available"
+                    div #[strong Due: ] #{bookInstance.due_back_pretty}
+
+                div #[strong ID: ]
+                    a(href=bookInstance.url) #{bookInstance._id};
+        hr
+
+
+    

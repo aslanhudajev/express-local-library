@@ -43,7 +43,12 @@ export const bookList = asyncHandler(async (req, res, next) => {
 
 //displays book
 export const bookDetails = asyncHandler(async (req, res, next) => {
-  const book = await Book.findOne({ _id: req.params.id }).exec();
+  const [book, bookInstances] = await Promise.all([
+    Book.findOne({ _id: req.params.id }).populate(["author", "genre"]).exec(),
+    BookInstance.find({ book: req.params.id }).exec(),
+  ]);
+
+  res.render("bookDetails", { book, bookInstances });
 });
 
 //displays book create form on GET

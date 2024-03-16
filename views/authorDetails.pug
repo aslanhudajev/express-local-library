@@ -1,0 +1,22 @@
+extends layout 
+
+block content 
+    h1= author.full_name 
+    div
+        if author.date_of_birth 
+            span #[strong Born: ] #{author.dob_pretty}
+            br
+        if  author.date_of_death 
+            span #[strong Born: ] #{author.dod_pretty}
+    br
+    br
+
+    h2 Books
+
+    div
+        hr
+        each book in books 
+            div 
+                a(href=book.url) #{book.title}
+                p= book.summary 
+        hr

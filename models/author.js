@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DateTime } from "luxon";
 
 const Schema = mongoose.Schema;
 
@@ -10,20 +11,31 @@ const AuthorSchema = new Schema({
 });
 
 AuthorSchema.virtual("full_name").get(function () {
-  if (this.first_name && this.last_name) {
-    return `${this.first_name}, ${this.last_name}`;
+  if (this.first_name && this.family_name) {
+    return `${this.family_name}, ${this.first_name}`;
   } else {
     return this.first_name
       ? this.first_name
-      : this.last_name
-        ? this.last_name
+      : this.family_name
+        ? this.family_name
         : "";
   }
 });
 
-AuthorSchema.virtual("url").get(() => {
-  const author = this;
-  return `/catalog/author/${author._id}`;
+AuthorSchema.virtual("url").get(function () {
+  return `/catalog/author/${this._id}`;
+});
+
+AuthorSchema.virtual("dob_pretty").get(function () {
+  return DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+    DateTime.DATE_MED,
+  );
+});
+
+AuthorSchema.virtual("dod_pretty").get(function () {
+  return DateTime.fromJSDate(this.date_of_death).toLocaleString(
+    DateTime.DATE_MED,
+  );
 });
 
 export default mongoose.model("AuthorModel", AuthorSchema);

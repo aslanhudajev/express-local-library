@@ -1,0 +1,13 @@
+extends layout 
+
+block content   
+    h1= title
+
+    h2 Books
+    if books.length > 0
+            each book in books
+                div
+                    a(href=book.url) #{book.title}
+                    p #{book.summary}
+    else 
+        span There are no books with this genre 

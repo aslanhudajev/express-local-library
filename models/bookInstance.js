@@ -19,8 +19,8 @@ BookInstanceSchema.virtual("url").get(function () {
   return `/catalog/bookinstance/${this._id}`;
 });
 
-BookInstanceSchema.virtual("due_back_pretty").get(function() {
+BookInstanceSchema.virtual("due_back_pretty").get(function () {
   return DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_SHORT);
-})
+});
 
 export default mongoose.model("BookInstanceModel", BookInstanceSchema);
