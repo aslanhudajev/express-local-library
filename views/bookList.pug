@@ -1,11 +1,11 @@
-extends layout 
+extends layout
 
-block content 
-    h1= title
-    ul 
-        if books.length > 0
-            each book in books 
-                li  
-                    a(href=book.url) #{book.title}   |   #{book.author.full_name}  
-        else 
-            span There are no books
+block content
+  h1= title
+  ul
+    if books.length > 0
+      each book in books 
+        li
+          a(href=book.url) #{ book.title } | #{ book.author.full_name } 
+    else
+      span There are no books

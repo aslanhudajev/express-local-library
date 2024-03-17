@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1= title
+  hr
+  form(method="post") 
+    input.form-control(
+      type="text",
+      name="name",
+      placeholder="Genre name",
+      required,
+      value=newGenre === undefined ? "" : newGenre.name
+    )
+    br
+    button.btn.btn-primary(type="submit") Create genre
+  br
+  if errors
+    each error in errors 
+      span.text-danger #{ error.msg }

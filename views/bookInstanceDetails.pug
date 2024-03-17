@@ -1,20 +1,20 @@
-extends layout 
+extends layout
 
-block content 
-    h1 ID: #{bookInstance._id}
+block content
+  h1 ID: #{ bookInstance._id }
 
-    div 
-        span #[strong Title: ] #{bookInstance.book.title}
-    div 
-        span #[strong Imprint: ] #{bookInstance.imprint}
-    div 
-        span #[strong Status: ] 
-        if bookInstance.status == "Available"
-            span.text-success #{bookInstance.status}
-        else if bookInstance.status == "Loaned"
-            span.text-warning #{bookInstance.status}
-        else
-            span.text-danger #{bookInstance.status}
-    unless bookInstance.status == "Available"
-        div 
-            span #[strong Due: ] #{bookInstance.due_back_pretty}
+  div
+    span #[strong Title:] #{ bookInstance.book.title }
+  div
+    span #[strong Imprint:] #{ bookInstance.imprint }
+  div
+    span #[strong Status:] 
+    if bookInstance.status == "Available"
+      span.text-success #{ bookInstance.status }
+    else if bookInstance.status == "Loaned"
+      span.text-warning #{ bookInstance.status }
+    else
+      span.text-danger #{ bookInstance.status }
+  unless bookInstance.status == "Available"
+    div
+      span #[strong Due:] #{ bookInstance.due_back_pretty }
