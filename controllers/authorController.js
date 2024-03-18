@@ -1,5 +1,6 @@
 import Author from "../models/author.js";
 import Book from "../models/book.js";
+import { body, validationResult } from "express-validator";
 import asyncHandler from "express-async-handler";
 
 //display all authors
@@ -23,14 +24,60 @@ export const authorDetails = asyncHandler(async (req, res, next) => {
 
   res.render("authorDetails", { author, books });
 });
+
 //displays auhtor create form on GET
-export const authorCreateGet = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPL.");
-});
+export const authorCreateGet = (req, res, next) => {
+  res.render("authorForm", { title: "Create author" });
+};
+
 //creates author
-export const authorCreatePost = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPL.");
-});
+export const authorCreatePost = [
+  body("first_name")
+    .isLength({ min: 3 })
+    .trim()
+    .escape()
+    .withMessage("First name can not be empty")
+    .isAlphanumeric()
+    .withMessage("First name can not have non-alphanumeric characters"),
+
+  body("family_name")
+    .isLength({ min: 3 })
+    .trim()
+    .escape()
+    .withMessage("Last name can not be emtpy")
+    .isAlphanumeric()
+    .withMessage("First name can not have non-alphanumeric characters"),
+
+  body("date_of_birth", "Date of birth is invalid")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+
+  body("date_of_death", "Date of death is invalid")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const newAuthor = new Author({
+      ...req.body,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("authorForm", {
+        title: "Create author",
+        errors: errors.array(),
+        newAuthor,
+      });
+      return;
+    } else {
+      await newAuthor.save();
+      res.redirect(newAuthor.url);
+    }
+  }),
+];
+
 //displays auhtor delete form on GET
 export const authorDeleteGet = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPL.");

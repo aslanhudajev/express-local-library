@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  h1= title
+  hr
+  form(method="POST")
+    label(for="first_name") First name:
+    input.form-control(
+      type="text",
+      name="first_name",
+      required,
+      placeholder="Arthur"
+    )
+
+    label(for="family_name") Family name:
+    input.form-control(
+      type="text",
+      name="family_name",
+      required,
+      placeholder="Doyle"
+    )
+
+    label(for="date_of_birth") Date of birth
+    input.form-control(type="date", name="date_of_birth")
+
+    label(for="date_of_death") Date of death
+    input.form-control(type="date", name="date_of_death")
+
+    br
+
+    button.btn.btn-primary(type="submit") Create
+
+    br
+    br
+
+    if errors
+      each error in errors 
+        div
+          span.text-danger #{ error.msg }

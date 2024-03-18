@@ -38,9 +38,10 @@ export const genreCreatePost = [
     .isLength({ min: 3 })
     .trim()
     .escape(),
+
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const newGenre = new Genre({ name: req.body.name });
+    const newGenre = new Genre({ ...req.body });
 
     if (!errors.isEmpty()) {
       res.render("genreForm", {
