@@ -1,4 +1,6 @@
 import BookInstance from "../models/bookInstance.js";
+import Book from "../models/book.js";
+import { body, validationResult } from "express-validator";
 import asyncHandler from "express-async-handler";
 
 //displays list of book instances
@@ -29,14 +31,44 @@ export const bookInstanceDetails = asyncHandler(async (req, res, next) => {
 });
 
 //displays book instance create form on GET
-export const bookInstanceCreateGet = asyncHandler((req, res, next) => {
-  res.send("NOT IMPL.");
+export const bookInstanceCreateGet = asyncHandler(async (req, res, next) => {
+  const books = await Book.find({}).sort({ title: 1 }).exec();
+  res.render("bookInstanceForm", { title: "Create book instance", books });
 });
 
 //creates book instance
-export const bookInstanceCreatePost = asyncHandler((req, res, next) => {
-  res.send("NOT IMPL.");
-});
+export const bookInstanceCreatePost = [
+  body("book", "Book can not be empty").notEmpty().trim().escape(),
+  body("imprint", "Imprint can not be empty").notEmpty().trim().escape(),
+  body("due_back", "Invalid due back date")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  body("status", "Status can not be empty").notEmpty().trim().escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const newBookInstance = new BookInstance({
+      ...req.body,
+    });
+
+    if (!errors.isEmpty()) {
+      const books = await Book.find({}).sort({ title: 1 }).exec();
+      res.render("bookInstanceForm", {
+        title: "Create book instance",
+        errors: errors.array(),
+        books,
+        newBookInstance,
+      });
+
+      return;
+    } else {
+      await newBookInstance.save();
+      res.redirect(newBookInstance.url);
+    }
+  }),
+];
 
 //displays book instance delete form on GET
 export const bookInstanceDeleteGet = asyncHandler((req, res, next) => {

@@ -8,8 +8,16 @@ import logger from "morgan";
 import catalogRouter from "./routes/catalog.js";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
+import compression from "compression";
+import helmet from "helmet";
+import RateLimit from "express-rate-limit";
 
 const app = express();
+
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 20,
+});
 
 await mongoose
   .connect(process.env.MDB_CONNECTION_STRING, { dbName: "local_library" })
@@ -24,6 +32,19 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  }),
+);
+
+app.use(limiter);
+
+app.use(compression());
+
 app.use(express.static("./public"));
 
 app.use("/", indexRouter);

@@ -80,11 +80,35 @@ export const authorCreatePost = [
 
 //displays auhtor delete form on GET
 export const authorDeleteGet = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPL.");
+  const [author, books] = await Promise.all([
+    Author.findOne({ _id: req.params.id }).exec(),
+    Book.find({ author: req.params.id }),
+  ]);
+
+  res.render("authorDeleteForm", {
+    title: `Delete ${author.full_name}?`,
+    author,
+    books,
+  });
 });
 //deletes author
 export const authorDeletePost = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPL.");
+  const [author, books] = await Promise.all([
+    Author.findOne({ _id: req.params.id }).exec(),
+    Book.find({ author: req.params.id }),
+  ]);
+
+  if (books.length > 0) {
+    res.render("authorDeleteForm", {
+      title: `Delete ${author.full_name}?`,
+      author,
+      books,
+    });
+    return;
+  } else {
+    await Author.deleteOne({ _id: req.params.id });
+    res.redirect("/catalog/authors");
+  }
 });
 //displays auhtor update form on GET
 export const authorUpdateGet = asyncHandler(async (req, res, next) => {

@@ -1,0 +1,86 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method="post") 
+    label(for="title") Title
+    input.form-control(
+      type="text",
+      name="title",
+      required,
+      placeholder="Lord of the rings",
+      value=newBook === undefined ? "" : newBook.title
+    )
+
+    label(for="author") Author
+    select.form-control(name="author", required)
+      if authors
+        each author in authors 
+          if newBook
+            if author._id.toString() === newBook.author._id.toString()
+              option(value=author._id, selected) #{ author.full_name }
+            else
+              option(value=author._id) #{ author.full_name }
+          else
+            option(value=author._id) #{ author.full_name }
+
+    label(for="summary") Summary
+    input.form-control(
+      type="text",
+      name="summary",
+      placeholder="A quick brown fox jumped over the...",
+      value=newBook === undefined ? "" : newBook.summary
+    )
+
+    label(for="isbn") ISBN
+    input.form-control(
+      type="text",
+      name="isbn",
+      required,
+      placeholder="ISBN123567",
+      value=newBook === undefined ? "" : newBook.isbn
+    )
+
+    if genres
+      label Genre
+      div(
+        style="display: flex; flex-direction: row; align-items: center; justify-content: space-between"
+      )
+        each genre in genres 
+          div
+            if genre.checked === true
+              input.checkbox-input(
+                type="checkbox",
+                name="genre",
+                value=genre._id,
+                id=genre._id,
+                checked
+              )
+            else
+              input.checkbox-input(
+                type="checkbox",
+                name="genre",
+                value=genre._id,
+                id=genre._id
+              )
+            label(for=genre._id) #{ genre.name }
+
+    br
+    br
+
+    button.btn.btn-primary(type="submit") Create
+
+    br
+    br
+
+    a(href=newBook.url)
+      button.btn.btn-primary Cancel
+
+    br
+    br
+
+    if errors
+      each error in errors 
+        div
+          span.text-danger #{ error.msg }

@@ -4,6 +4,8 @@ import Book from "../models/book.js";
 import BookInstance from "../models/bookInstance.js";
 import Genre from "../models/genre.js";
 import { body, validationResult } from "express-validator";
+import { genreList } from "./genreController.js";
+import book from "../models/book.js";
 
 //displays home page
 export const index = asyncHandler(async (req, res, next) => {
@@ -54,8 +56,11 @@ export const bookDetails = asyncHandler(async (req, res, next) => {
 
 //displays book create form on GET
 export const bookCreateGet = asyncHandler(async (req, res, next) => {
-  const authors = await Author.find({}).sort({ family_name: 1 }).exec();
-  const genres = await Genre.find({}).sort({ name: 1 }).exec();
+  const [authors, genres] = await Promise.all([
+    Author.find({}).sort({ family_name: 1 }).exec(),
+    Genre.find({}).sort({ name: 1 }).exec(),
+  ]);
+
   res.render("bookForm", { title: "Create book", authors, genres });
 });
 
@@ -113,11 +118,70 @@ export const bookDeletePost = asyncHandler((req, res, next) => {
 });
 
 //displays book update form on GET
-export const bookUpdateGet = asyncHandler((req, res, next) => {
-  res.send("NOT IMPL.");
+export const bookUpdateGet = asyncHandler(async (req, res, next) => {
+  const [newBook, authors, genres] = await Promise.all([
+    Book.findOne({ _id: req.params.id }).exec(),
+    Author.find({}).sort({ family_name: 1 }).exec(),
+    Genre.find({}).exec(),
+  ]);
+
+  for (const genre of genres) {
+    for (const newBookGenre of newBook.genre) {
+      if (newBookGenre._id.toString() === genre._id.toString()) {
+        genre.checked = true;
+      }
+    }
+  }
+
+  console.log(genres);
+
+  res.render("bookUpdateForm", {
+    title: "Update book",
+    newBook,
+    authors,
+    genres,
+  });
 });
 
 //updates book
-export const bookUpdatePost = asyncHandler((req, res, next) => {
-  res.send("NOT IMPL.");
-});
+export const bookUpdatePost = [
+  (req, res, next) => {
+    if (!Array.isArray(req.body.genre)) {
+      req.body.genre =
+        typeof req.body.genre === undefined ? [] : [req.body.genre];
+    }
+    next();
+  },
+
+  body("title", "Title can not be empty").notEmpty().trim().escape(),
+  body("author", "You must choose an author").notEmpty().trim().escape(),
+  body("summary", "Summary can not be empty").notEmpty().trim().escape(),
+  body("isbn", "ISBN can not be emtpy").notEmpty().trim().escape(),
+  body("genre.*").escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const newBook = new Book({
+      ...req.body,
+    });
+
+    if (!errors.isEmpty()) {
+      const authors = await Author.find({}).sort({ family_name: 1 }).exec();
+      const genres = await Genre.find({}).sort({ name: 1 }).exec();
+
+      res.render("bookForm", {
+        title: "Update book",
+        genres,
+        authors,
+        errors: errors.array(),
+        newBook,
+      });
+
+      return;
+    }
+
+    await newBook.save();
+    res.redirect(newBook.url);
+  }),
+];

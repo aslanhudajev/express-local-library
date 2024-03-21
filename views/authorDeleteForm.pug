@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+
+  br
+  br
+  if books.length > 0
+    h3 Note: These books have to be deleted before you can delete this author
+
+    each book, index in books 
+      div
+        a(href=book.url) #{ index + 1 }. #{ book.title }
+  br
+  br
+
+  form(method="post")
+    button.btn.btn-primary(type="submit") Delete author

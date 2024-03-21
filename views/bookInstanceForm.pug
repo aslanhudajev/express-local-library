@@ -1,0 +1,55 @@
+extends layout
+
+block content
+  - const statuses = ["Available", "Loaned", "Maintenance"];
+
+  h1= title
+  form(method="post") 
+    label(for="book") Book
+    select.form-control(name="book", required)
+      if books
+        each book in books
+          if newBookInstance
+            if book._id.toString() === newBookInstance.book._id.toString()
+              option(value=book._id, selected) #{ book.title }
+            else
+              option(value=book._id) #{ book.title }
+          else
+            option(value=book._id) #{ book.title }
+
+    label(for="imprint") Imprint
+    input.form-control(
+      type="text",
+      name="imprint",
+      value=newBookInstance === undefined ? "" : newBookInstance.imprint
+    )
+
+    label(for="due_back") Due back
+    input.form-control(
+      type="date",
+      name="due_back",
+      value=newBookInstance === undefined ? "" : newBookInstance.due_back
+    )
+
+    label(for="status") Status
+    select.form-control(name="status", required)
+      each status in statuses 
+        if newBookInstance
+          if newBookInstance.status === status
+            option(value=status, selected) #{ status }
+          else
+            option(value=status) #{ status }
+        else
+          option(value=status) #{ status }
+
+    br
+
+    button.btn.btn-primary(type="submit") Create
+
+    br 
+    br
+
+    if errors
+      each error in errors 
+        div
+          span.text-danger #{ error.msg }

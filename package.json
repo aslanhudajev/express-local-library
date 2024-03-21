@@ -1,6 +1,9 @@
 {
   "name": "express-local-library",
   "version": "0.0.0",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "private": true,
   "type": "module",
   "scripts": {
@@ -18,7 +21,10 @@
     "luxon": "^3.4.4",
     "mongoose": "^8.2.1",
     "morgan": "~1.9.1",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "compression": "^1.7.4",
+    "express-rate-limit": "^7.2.0",
+    "helmet": "^7.1.0"
   },
   "devDependencies": {
     "@prettier/plugin-pug": "^3.0.0",
