@@ -40,7 +40,6 @@ export const bookList = asyncHandler(async (req, res, next) => {
     .sort({ title: 1 })
     .populate("author")
     .exec();
-  console.log(books);
   res.render("bookList", { title: "Book list", books });
 });
 
